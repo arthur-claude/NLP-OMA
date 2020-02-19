@@ -65,13 +65,23 @@ class SkipGram:
 		self.loss = []
 		self.trainWords = 0
 		self.accLoss = 0.
-		self.q =
+		self.q = {}
+		s = 0
+		for w in self.w2id.keys():
+			f = self.occ[w]**(3/4)
+			s += f
+			self.q[self.w2id[w]] = f
+		self.q = {k: v / s for k, v in self.q.items()} # dictionary with keys = ids and values = prob q
+
 
 	def sample(self, omit):
 		"""samples negative words, ommitting those in set omit"""
 		w2id_list = list(self.w2id.values())
 		[w2id_list.remove(omit_word_id) for omit_word_id in omit]
-		negativeIds = np.random.choice(w2id_list, len(w2id_list) / self.negativeRate)
+		q_list = []
+		for i in w2id_list:
+			q_list.append(self.q[i])  #probleme somme pas egale à 1 du coup ??
+		negativeIds = np.random.choice(w2id_list, size=len(w2id_list) / self.negativeRate, p=q_list)
 		return negativeIds
 
 	def train(self, nb_epochs):
