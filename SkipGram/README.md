@@ -42,6 +42,7 @@ The function **__init__** takes into parameters:
 - **negativeRate** the ratio of between the numbers of negatives and positives pairs (see the theory).
 - **winSize** the size of the window in which the "context" words are observed for each word. 
 - **minCount** the minimum number of times a word must appear to be considered. 
+
 This function allows to initialize all the required elements for the class **SkipGram**.
 
 ...
