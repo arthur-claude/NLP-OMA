@@ -9,10 +9,11 @@ from sklearn.preprocessing import normalize
 
 
 __authors__ = ['Antoine Guiot','Arthur Claude','Armand Margerin']
-__emails__  = ['antoine.guiot@supelec.fr', 'athur.claude@supelec.fr', 'armand.margerin@gmail.com']
+__emails__  = ['antoine.guiot@supelec.fr', 'arthur.claude@supelec.fr', 'armand.margerin@gmail.com']
 
 import pickle
 from spacy.lang.en import English
+from decimal import Decimal
 nlp = English()
 
 # pour ajouter un mot en stop word nlp.vocab[word].is_stop = True
@@ -51,7 +52,7 @@ class SkipGram:
 				else:
 					self.occ[word] = 1
 		self.vocab = [w for w in self.occ.keys() if self.occ[w] > self.minCount] # list of valid words
-		idx = 1
+		idx = 0
 		for sentence in sentences:
 			for word in sentence:
 				if word not in self.w2id.keys() and word in self.vocab:
@@ -60,8 +61,8 @@ class SkipGram:
 		self.trainset = sentences # set of sentences
 		self.negativeRate = negativeRate
 		self.nEmbed = nEmbed
-		self.U = np.random.rand((len(self.w2id), self.nEmbed))
-		self.V = np.random.rand((len(self.w2id), self.nEmbed))
+		self.U = np.random.random((self.nEmbed, len(self.w2id)))
+		self.V = np.random.random((self.nEmbed, len(self.w2id)))
 		self.loss = []
 		self.trainWords = 0
 		self.accLoss = 0.
@@ -77,17 +78,22 @@ class SkipGram:
 	def sample(self, omit):
 		"""samples negative words, ommitting those in set omit"""
 		w2id_list = list(self.w2id.values())
-		[w2id_list.remove(omit_word_id) for omit_word_id in omit]
-		q_list = []
-		for i in w2id_list:
-			q_list.append(self.q[i])  #probleme somme pas egale à 1 du coup ??
-		negativeIds = np.random.choice(w2id_list, size=len(w2id_list) / self.negativeRate, p=q_list)
+		#[w2id_list.remove(omit_word_id) for omit_word_id in omit]
+		#q_list = []
+		#for i in w2id_list:
+		#	q_list.append(self.q[i])
+		q_list = list(self.q.values())
+		negativeIds = np.random.choice(w2id_list, size=self.negativeRate, p=q_list)
+		for i in range(len(negativeIds)):
+			if negativeIds[i] in omit:
+				while negativeIds[i] in omit:
+					negativeIds[i] = np.random.choice(w2id_list, p=q_list)
 		return negativeIds
 
 	def train(self, nb_epochs):
 		for epoch in range(nb_epochs):
 			for counter, sentence in enumerate(self.trainset):
-				sentence = filter(lambda word: word in self.vocab, sentence)
+				sentence = list(filter(lambda word: word in self.vocab, sentence))
 
 				for wpos, word in enumerate(sentence):
 					wIdx = self.w2id[word]
@@ -152,7 +158,7 @@ class SkipGram:
 
 	def save(self,path):
 		with open(path, 'wb') as f:
-			pickle.dump([self.U, self.w2id], f)
+			pickle.dump([self.U, self.w2id, self.vocab], f)
 
 	def similarity(self,word1,word2):
 		"""
@@ -180,15 +186,19 @@ class SkipGram:
 			w2 = self.U[:, id_word_2]
 
 		scalair = w1.dot(w2)
-		#similarity = 1 / (1 + np.exp(-scalair))
-		similarity = scalair / (np.linalg.norm(w1) * np.linalg.norm(w2))
-		return similarity
+		similarity = 1 / (1 + np.exp(-scalair))
+		#similarity = scalair / (np.linalg.norm(w1) * np.linalg.norm(w2))
+		return Decimal(similarity)
 
 	@staticmethod
 	def load(path):
 		with open(path, 'rb') as f:
-			U, w2id = pickle.load(f)
-		return U, w2id
+			U_l, w2id_l, vocab_l = pickle.load(f)
+			sg = SkipGram([])
+			sg.U = U_l
+			sg.w2id = w2id_l
+			sg.vocab = vocab_l
+		return sg
 
 if __name__ == '__main__':
 
@@ -202,7 +212,7 @@ if __name__ == '__main__':
 	if not opts.test:
 		sentences = text2sentences(opts.text)
 		sg = SkipGram(sentences)
-		sg.train(...)
+		sg.train(3)
 		sg.save(opts.model)
 
 	else:
