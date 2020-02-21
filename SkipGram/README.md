@@ -8,6 +8,8 @@ and based on the optimisation of a log-likelihood function using a stochastic gr
 The whole method is presented in an article written by Adrien Guille (Université Lyon 2) available at:
 http://mediamining.univ-lyon2.fr/people/guille/word_embedding/skip_gram_with_negative_sampling.html?fbclid=IwAR0cO53tj_8Pcs9yXb_QuPOOjvbQ1tk-cc0dJ6cGinMAQa9bwL2ENTkLRW4
 
+This file explains the different functions implemented but does not go into the details of mathematics. The pdf file **Algorithm_Explanation.pdf** contains all the theorical explanations.
+
 ## Prerequisites
 
 In the script, the next libraries are used:
@@ -55,7 +57,9 @@ The principals elements are:
 ### Function sample
 The function **sample** allows to sample **negativeRate** negatives words and takes into parameter **omit**, an object containing the words to ommit during the random negative words selection.
 
-Thus, this fonction selects randomly **negativeRate** negatives words into the vocabulary,  on the basis of the probabilities contained into **q**.
+Thus, this fonction selects randomly **negativeRate** negatives words into the vocabulary,  on the basis of the probabilities contained into **q**. If a word of **omit** is selected, a new word is drawn (until we have only words that are not into **omit**)
+
+The function returns the list containing the ids of the selected negative words.
 
 ### Function train
 The function **train** allows to train our model. It takes into parameter **nb_epochs**, the number of training epochs to be realized.
@@ -85,10 +89,14 @@ In this function, the lines representing the two words considered in the matrice
 The function **save** allows to save our model. It takes in parameters a path and we save the matrix **U**, and the dictionaries **w2id** and **vocab** at this place thanks to the **pickle** library.  
 
 ### Function similarity
-The function **save** allows to l our model
+The function **similarity** allows to computes similarity between two words. This function takes into parameters two words: **word1** and **word2**. It returns the cosine similarity of these two words.
+
+Unknown words are mapped to one common vector containing zeros.
 
 ### Function load (static method)
 The function **load** allows to load a model previously saved. It takes in parameters a path where a model have been saved and construct a **skipGram** object whose elements **U**, **w2id** and **vocab** are set from the loaded **pickle** file.
+
+The function return this object.
 
 ## Tests
 
