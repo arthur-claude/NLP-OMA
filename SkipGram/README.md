@@ -45,11 +45,25 @@ The function **__init__** takes into parameters:
 
 This function allows to initialize all the required elements for the class **SkipGram**.
 
-...
+The principals elements are:
+- **vocab**, a dictionary containing the number of occurences of each word in the input **sentences** appearing more than **minCount** times.
+- **w2id**, a dictionnary containing containing all the words of **vocab** and their ids.
+- **U**, the word representation matrix. Each word is represented by one line of this matrix. That is what we are trying to build.
+- **V**, the matrix of contextual representations of words. Each word as a contextual word is represented by a line of this matrix.
+- **q**, a list of probabilities. The i-th item of this list is the probability that the i-th word is taken as a negative word. It will be used in the sample function.
 
 ### Function sample
+The function **sample** allows to sample **negativeRate** negatives words and takes into parameter **omit**, an object containing the words to ommit during the random negative words selection.
+
+Thus, this fonction selects randomly **negativeRate** negatives words into the vocabulary,  on the basis of the probabilities contained into **q**.
 
 ### Function train
+The function **train** allows to train our model. It takes into parameter **nb_epochs**, the number of training epochs to be realized.
+
+Firstly, the learning rate **eta** is initialized to 0.025. 
+
+Then, for each epoch, 
+
 
 ### Function trainWord
 
