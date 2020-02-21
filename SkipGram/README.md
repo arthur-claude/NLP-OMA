@@ -74,6 +74,7 @@ Then, for each epoch,
 ### Function load (static method)
 
 
+## Tests
 
 ## Acknowledgments
 
