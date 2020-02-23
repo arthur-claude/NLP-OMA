@@ -72,12 +72,10 @@ Then, for each epoch:
 For each word, the following steps are realized:
 
 -The contextual word window around the word is scanned. 
--For each contextual word, **negativeRate** negative words are sampled thanks to the function **sample**, and the function **trainWord** is called. See the next section for the description of this function.
+-For each contextual word, **negativeRate** negative words are sampled thanks to the function **sample**, and the function **trainWord** is called. See the next section for the description of this function. The function **compute_loss** is called, and the obtained value is added to the cumulative loss **accLoss**.
 
 
-Moreover, a counter allows to see how many sentences we have been through. 
-
-ACCLOSS ?
+Moreover, a counter allows to see how many sentences we have been through. Each time we go through 100 sentences, the cumulative loss is added to a **loss** list and reset to zero.
 
 
 ### Function trainWord
@@ -88,17 +86,22 @@ In this function, the lines representing the two words considered in the matrice
 ### Function save
 The function **save** is used to save our model. It takes as parameters a path, where we save the matrix **U**, and the dictionaries **w2id** and **vocab** thanks to the **pickle** library.  
 
+### Function compute_loss
+The function **compute_loss** computes the loss. This loss, calculated for each pair of word and context word in the function **train**, is defined as the sigmoid function applied to the scalar product of the representations of these words. 
+
+### Function compute_score
+The function **compute_score** computes the score obtained by our algorithm by comparing the similarity results obtained for some pairs of words with those provided in a .csv file. This score is defined as the correlation between the two sets of similarities.
+
 ### Function similarity
 The function **similarity** computes the similarity between two words. This function takes 2 parameters: **word1** and **word2**. It returns the cosine similarity of these two words.
 
-Unknown words are mapped to one common vector containing zeros.
+Unknown words are mapped to one common vector containing a constant value.
 
 ### Function load (static method)
 The function **load** is used to load a model previously saved. It takes as parameter a path where a model have been saved and creates a **skipGram** object whose elements **U**, **w2id** and **vocab** are set from the loaded **pickle** file.
 
 The function return this object.
 
-## Tests
 
 
 
