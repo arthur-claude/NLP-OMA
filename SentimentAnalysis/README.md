@@ -30,4 +30,5 @@ In the script, the following libraries are used:
 ## Results obtained
 
 The accuracy obtained on the development set is XX%.
+
 Please note that the majority class of the dev set is about 70% (positive labels).
