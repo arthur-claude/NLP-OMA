@@ -18,11 +18,30 @@ sentence in which that opinion is expressed.
 ## Prerequisites
 
 In the script, the following libraries are used:
-- xxx for ???
-- xxx for ???
+- nltk for pre-processing
+- scikit-learn for pre-processing
+- tensorflow (keras) for pre-processing and construction of the model
+
+Pre-trained word vectors from **fastText** are used. If this data is not present in the user's **resources** file, the download is automatic in our code.
 
 ## Classifier Class
 
+### Preprocessing: read_data function
+This function allows to read the data .csv files and to convert them into the format required for the use of our model. 
+
+First, the polarity labels are processed into integers, and the label vector is converted into a binary class matrix thanks to keras.
+
+Then, some pre-processing operations are applied to the sentences of each row of the dataframe:
+- The target term is removed from the sentence
+- Stopwords are removed from the sentence, except some particular stopwords that can have an impact on sentiment analysis (not, no, nor).
+- The python file **word2vec.py** is used to encode the sentences. Each word in the sentence is encoded with its corresponding vector of size 300 given by the pre-trained vectors of fastText. In order to have the same input size for each sentence, we set the sentence length to 100. In this way, for sentences with less than 100 words, the sequence of words is padded with zeros vectors until 100 words, and for sentences with more than 100 words, the sentence is truncated (meaning we could possibly loss information). If needed, this parameter can be ser as more than 100.
+
+Finally, the aspect categories are encoded thanks to a one-hot encoder for each row.
+
+The function **read_data** returns 3 elements: the set of preprocessed sentences, the set of encoded categories, and the set of labels.  
+
+### Model: train and predict functions
+The model used is a Deep Learning model. 
 
 
 
