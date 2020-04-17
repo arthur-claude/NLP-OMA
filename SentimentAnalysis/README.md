@@ -42,12 +42,16 @@ The function **read_data** returns 3 elements: the set of preprocessed sentences
 
 ### Model: train and predict functions
 The model used is a Deep Learning model. 
+The sentences, size (100,300), go through a Dense layer of size 16, then in a LSTM of size 16. 
+In parallel, the encoded categories, size (12,), go through a Dense layer of size 16.
+The outputs are combined thanks to a Concatenate Layer, and the final layer is a Dense layer of size 3.
 
+From the final vectors obtained, we can deduce the polarity of the opinion.
 
-
+The function **train** is used to train the model from the train set, and the function **predict** is used to predict opinions for a new dataset.
 
 ## Results obtained
 
-The accuracy obtained on the development set is XX%.
+The accuracy obtained on the development set is 78.73% (mean for 5 runs, with a variance of 0.48%).
 
 Please note that the majority class of the dev set is about 70% (positive labels).
