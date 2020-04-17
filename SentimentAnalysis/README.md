@@ -22,7 +22,7 @@ In the script, the following libraries are used:
 - scikit-learn for pre-processing
 - tensorflow (keras) for pre-processing and construction of the model
 
-Pre-trained word vectors from **fastText** are used. If this data is not present in the user's **resources** file, the download is automatic in our code.
+Pre-trained word vectors from **fastText** are used. If this data is not present in the user's *resources* file, the download is automatic in our code.
 
 ## Classifier Class
 
