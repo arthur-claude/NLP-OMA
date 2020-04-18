@@ -34,7 +34,7 @@ First, the polarity labels are processed into integers, and the label vector is 
 Then, some pre-processing operations are applied to the sentences of each row of the dataframe:
 - The target term is removed from the sentence
 - Stopwords are removed from the sentence, except some particular stopwords that can have an impact on sentiment analysis (not, no, nor).
-- The python file **word2vec.py** is used to encode the sentences. Each word in the sentence is encoded with its corresponding vector of size 300 given by the pre-trained vectors of fastText. In order to have the same input size for each sentence, we set the sentence length to 100. In this way, for sentences with less than 100 words, the sequence of words is padded with zeros vectors until 100 words, and for sentences with more than 100 words, the sentence is truncated (meaning we could possibly loss information). If needed, this parameter can be ser as more than 100.
+- The python file **word2vec.py** is used to encode the sentences. Each word in the sentence is encoded with its corresponding vector of size 300 given by the pre-trained vectors of fastText. In order to have the same input size for each sentence, we set the sentence length to 100. In this way, for sentences with less than 100 words, the sequence of words is padded with zeros vectors until 100 words, and for sentences with more than 100 words, the sentence is truncated (meaning we could possibly loss information). If needed, this parameter can be set as more than 100.
 
 Finally, the aspect categories are encoded thanks to a one-hot encoder for each row.
 
